@@ -7,7 +7,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <meta property="og:image" content="map-assets/cover.png"/>
+  <meta property="og:image" content="osmose-assets/cover.png"/>
   <meta property="og:type" content="website"/>
   <meta property="og:url" content="http://felixblume.com/osmose" />
   <meta property="og:title" content="Félix Blume |  Osmose Project" />
@@ -15,10 +15,10 @@
    <link href="style.css" rel="stylesheet" />
   <!-- Google fonts-->
   <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Lato:300,400,700" />
-  <link rel="shortcut icon" href="map-assets/favicon.png" />
+  <link rel="shortcut icon" href="osmose-assets/favicon.png" />
   <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no"/>
-    <link rel="stylesheet" href="map-assets/map.css">
-    <script src="map-assets/map.js"></script>
+    <link rel="stylesheet" href="osmose-assets/map.css">
+    <script src="osmose-assets/map.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script src="https://api.mapbox.com/mapbox-gl-js/v1.9.1/mapbox-gl.js"></script>
   <link href="https://api.mapbox.com/mapbox-gl-js/v1.9.1/mapbox-gl.css" rel="stylesheet" />
@@ -84,7 +84,7 @@
           
           map.on('load', function () {
                         
-            map.loadImage('map-assets/sound2.png',
+            map.loadImage('osmose-assets/sound2.png',
               function(error, image) {
               if (error) throw error;
               map.addImage('wave', image);
@@ -149,7 +149,7 @@
                         
             
             map.loadImage(
-              'map-assets/photo.png',
+              'osmose-assets/photo.png',
               function(error, image) {
               if (error) throw error;
               map.addImage('photos', image);
@@ -208,7 +208,7 @@
       
       map.on('idle', () => {
       var toggleableLayerIds = ['Sons', 'Photos'];
-      var banner = ['map-assets/sound2.png', 'map-assets/photo.png', 'map-assets/video.png'];
+      var banner = ['osmose-assets/sound2.png', 'osmose-assets/photo.png', 'osmose-assets/video.png'];
             // set up the corresponding toggle button for each layer
             for (var i = 0; i < toggleableLayerIds.length; i++) {
                 var id = toggleableLayerIds[i];
@@ -216,7 +216,7 @@
                  img.src = banner[i];
                  img.width = "50";
                  var check = document.createElement('img');
-                 check.src = 'map-assets/check.png';  
+                 check.src = 'osmose-assets/check.png';  
                  check.width = "25"; 
                  check.style.paddingTop = "40px";
                  var title = document.createElement('p');
