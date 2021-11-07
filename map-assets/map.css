@@ -1,0 +1,240 @@
+      body {
+          margin: 0;
+          padding: 0;
+          font-family: 'lato', Sans-serif;
+        }
+
+        #map {
+          position: absolute;
+          top: 0;
+          bottom: 0;
+          width: 100%;
+          z-index:-1;
+        }
+        
+audio{
+    width: 100%;
+    background-color: white;
+    opacity: 1;
+}
+
+
+        /* Popup styling */
+        .mapboxgl-popup img{
+            width: 100%;
+        }
+        .mapboxgl-popup {
+          padding-bottom: 55px;
+        }
+
+        .mapboxgl-popup-close-button {
+          display: none;
+        }
+
+        .mapboxgl-popup-content {
+          font: 400 15px/22px 'Lato', 'Source Sans Pro', 'Helvetica Neue', Sans-serif;
+          padding: 5px !important;
+          width: 350px;
+        }
+
+
+        .mapboxgl-popup-content h3 {
+          background: rgb(61, 59, 59);
+          text-align: center;
+          color: #fff;
+          margin: 0;
+          display: block;
+          font-weight: 700;
+          margin-top: -5px;
+        }
+
+        .mapboxgl-popup-content h4 {
+          margin: 0;
+          display: block;
+          font-weight: 400;
+        }
+
+        .mapboxgl-container {
+          cursor: pointer;
+        }
+
+        .mapboxgl-popup-anchor-top>.mapboxgl-popup-content {
+          margin-top: 3px;
+        }
+
+        .mapboxgl-popup-anchor-top>.mapboxgl-popup-tip {
+          border-bottom-color: rgb(61, 59, 59);
+        }
+
+    a.mapboxgl-ctrl-logo{
+      display: none !important;
+    }
+
+    .mapboxgl-ctrl-bottom-right{
+      display: none !important;
+    }
+
+
+    #menu {
+    background: white;
+    color: #214159; 
+    position: absolute;
+    z-index: 1;
+    top: 0px;
+    left: 0px;
+    width: 70px;
+    height: 100%;
+    font-family: 'Lato', sans-serif;
+    }
+
+    #menu a {
+    font-size: 1em;
+    text-transform: UPPERCASE;
+    color: #214159;
+    display: block;
+    height: 50%;
+    margin: 0;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+    text-align: center;
+    }
+
+    #menu a:last-child {
+    border: none;
+    }
+
+    #menu a:hover {
+    color: #4282B3;
+    }
+
+    #menu a.active {
+    /*background-color: #4282B3;*/
+    background:  #8bbbd5;
+    color: white;
+    }
+
+    #menu a.active:hover {
+    color: #4282B3;
+    }
+
+    #menu p{
+      transform: rotate(270deg);
+    }
+
+
+    #menu img{
+      padding-bottom: 10%;
+    }
+
+
+    @media screen and (max-width: 700px) {
+      #menu a {
+      font-size: 0.8em;
+      }
+      #menu img{
+        padding-top: 10%;
+        padding-bottom: 10%;
+        width: 60%;
+      }
+      #menu{
+        width: 50px;
+        height: 100%;
+      }
+    }
+
+    .topnav{
+      overflow: hidden;
+      background-color: transparent;
+      color: black;
+      position: absolute;
+      z-index: 10;
+      font-size: 12px;
+      font-family: 'lato', sans-serif;
+      font-weight: 700;
+      color: #222 !important;
+      line-height: 140%;
+      letter-spacing: 1px;
+      left: 70px;
+    }
+      
+    
+    .topnav a{
+      float: left;
+      color: black;
+      text-align: center;
+      padding: 14px 20px;
+      font-size: 14px;
+      text-transform: UPPERCASE;
+      text-decoration: none;
+    }
+
+    .topnav a:hover{
+      background-color: #transparent;
+      color: #214159;
+    }
+
+    .topnav a.active{
+      background-color: #transparent;
+      color: white;
+    }
+      
+      
+    @media screen and (min-width: 900px) { 
+        #mobilenav{
+            display:none;
+        } 
+      }
+      
+      @media screen and (max-width: 900px) {
+          .topnav{
+            display:none;
+          }
+        
+          #mobilenav {
+            display:block;
+            overflow: hidden;
+            background-color: transparent;
+            position: relative;
+            height: 60px;
+          }
+          #mobilenav #myLinks {
+            display: none;
+            padding-left: 90px;
+            padding-top: 10px;
+          }
+
+          #mobilenav a{
+            color: #222;
+            font-weight: 400;
+            padding: 14px 16px;
+            text-decoration: none;
+            font-size: 14px;
+            line-height: 35px;
+            text-transform: uppercase;
+          }
+
+          #mobilenav a.icon {
+            background: black;
+            color: white;
+            display: block;
+            position: absolute;
+            right: 0;
+            top: 0;
+          }
+
+          .active {
+            background-color: #4CAF50;
+            color: white;
+          }
+      }
+    
+
+
+    .share{
+      position: absolute;
+      bottom: 5px !important;
+      right: 10px;
+    }
+      .fb-share-button{
+        bottom: 5px;
+      }

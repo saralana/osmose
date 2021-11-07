@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+    <title>Félix Blume OSMOSE Map</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <meta property="og:image" content="map-assets/cover.png"/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:url" content="http://felixblume.com/osmose" />
+  <meta property="og:title" content="Félix Blume |  Osmose Project" />
+  <meta property="og:description" content="Félix Blume is a sound artist and sound engineer. He currently works and lives between Mexico, Brazil and France." />
+   <link href="style.css" rel="stylesheet" />
+  <!-- Google fonts-->
+  <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Lato:300,400,700" />
+  <link rel="shortcut icon" href="map-assets/favicon.png" />
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no"/>
+    <link rel="stylesheet" href="map-assets/map.css">
+    <script src="map-assets/map.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://api.mapbox.com/mapbox-gl-js/v1.9.1/mapbox-gl.js"></script>
+  <link href="https://api.mapbox.com/mapbox-gl-js/v1.9.1/mapbox-gl.css" rel="stylesheet" />
+  <script src="https://npmcdn.com/csv2geojson@latest/csv2geojson.js"></script>
+  <script src="https://npmcdn.com/@turf/turf/turf.min.js"></script>
+  <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.0.0/mapbox-gl-geocoder.min.js"></script>
+  <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.0.0/mapbox-gl-geocoder.css" type="text/css" />
+  
+</head>
+
+<body>
+
+<nav id="menu"></nav>  
+<div id="map"></div>
+  
+  <script>
+    var geocoder = new MapboxGeocoder({
+       accessToken: mapboxgl.accessToken,
+       mapboxgl: mapboxgl
+    });
+    
+    var transformRequest = (url, resourceType) => {
+      var isMapboxRequest =
+        url.slice(8, 22) === "api.mapbox.com" ||
+        url.slice(10, 26) === "tiles.mapbox.com";
+      return {
+        url: isMapboxRequest
+          ? url.replace("?", "?pluginName=sheetMapper&")
+          : url
+      };
+    }; 
+   mapboxgl.accessToken = 'pk.eyJ1Ijoic2FyYWxnYyIsImEiOiJja2NjbTAyczkwNXA3Mnlscm5nbjN5OHZiIn0.yNcJkPBSugRlIeGkXDRlZw';  
+    var map = new mapboxgl.Map({
+      container: 'map', 
+      style: 'mapbox://styles/saralgc/ckemj6l171bw419k9ikpxi3nj', 
+      center: [-43.93956287329226, -19.92207944864404], 
+      zoom: 15.5,
+      transformRequest: transformRequest
+    });
+
+    $(document).ready(function () {
+      $.ajax({
+        type: "GET",
+        url: 'https://docs.google.com/spreadsheets/d/1DyvBBQ6TUpIhwhJiTGLT4TnjaW9SNf9uBa4aZnH-LhA/gviz/tq?tqx=out:csv&sheet=Sons',
+        dataType: "text",
+        success: function (csvData) { makeGeoJSON(csvData); }
+      });
+      
+      $.ajax({
+        type: "GET",
+        url: 'https://docs.google.com/spreadsheets/d/1DyvBBQ6TUpIhwhJiTGLT4TnjaW9SNf9uBa4aZnH-LhA/gviz/tq?tqx=out:csv&sheet=Photos',
+        dataType: "text",
+        success: function (csvData) { makeGeoJSON2(csvData); }
+      });
+      
+      
+      function makeGeoJSON(csvData) {
+        csv2geojson.csv2geojson(csvData, {
+          latfield: 'Latitude',
+          lonfield: 'Longitude',
+          delimiter: ','
+        }, function (err, data) {
+          
+          map.on('load', function () {
+                        
+            map.loadImage('map-assets/sound2.png',
+              function(error, image) {
+              if (error) throw error;
+              map.addImage('wave', image);
+            });
+            // SOUNDS LAYER
+            map.addLayer({
+              'id': 'Sons',
+              'type': 'symbol',
+              'source': {
+                'type': 'geojson',
+                'data': data
+              },
+
+              'layout': {
+                'visibility': 'visible',
+                'icon-image': 'wave',
+                'icon-anchor': 'bottom',
+                "icon-allow-overlap": true,
+              }
+            });        
+
+            map.on('click', 'Sons', function (e) {
+                var coordinates = e.features[0].geometry.coordinates.slice();
+                var description = `<audio controls autoplay src="https://www.felixblume.com/BeloHorizonte-Sons/` + e.features[0].properties.Embed + `.mp3"></audio>`;
+
+                while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+                coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+                }
+
+                new mapboxgl.Popup()
+                  .setLngLat(coordinates)
+                  .setHTML(description)
+                  .addTo(map);
+            });
+
+            map.on('mouseenter', 'Sons', function () {
+              map.getCanvas().style.cursor = 'pointer';
+            });
+
+            map.on('mouseleave', 'places', function () {
+              map.getCanvas().style.cursor = '';
+            });
+
+             map.setLayoutProperty('Sons', 'icon-size', 
+            ['interpolate', ['linear'], ['zoom'],0,0.03,6,0.05,15,0.1, 24,0.3]);
+            
+          });
+
+        });
+      };
+      
+      
+      
+      function makeGeoJSON2(csvData) {
+        csv2geojson.csv2geojson(csvData, {
+          latfield: 'Latitude',
+          lonfield: 'Longitude',
+          delimiter: ','
+        }, function (err, data) {
+          
+          map.on('load', function () {
+                        
+            
+            map.loadImage(
+              'map-assets/photo.png',
+              function(error, image) {
+              if (error) throw error;
+              map.addImage('photos', image);
+            });
+            
+
+            //SOUND PIECES LAYER 
+            map.addLayer({
+              'id': 'Photos',
+              'type': 'symbol',
+              'source': {
+                'type': 'geojson',
+                'data': data
+              },
+
+              'layout': {
+                'visibility': 'visible',
+                'icon-image': 'photos',
+                'icon-anchor': 'bottom', 
+                "icon-allow-overlap": true,
+              }
+            });
+                   
+            
+            map.on('click', 'Photos', function (e) {
+                var coordinates = e.features[0].geometry.coordinates.slice();
+                  
+                var description = `<img src="https://www.felixblume.com/BeloHorizonte-Photos/`+ e.features[0].properties.Embed +`.jpeg">`;
+
+                while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+                coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+                }
+                new mapboxgl.Popup()
+                  .setLngLat(coordinates)
+                  .setHTML(description)
+                  .addTo(map);
+            });
+            
+
+            map.on('mouseenter', 'Photos', function () {
+              map.getCanvas().style.cursor = 'pointer';
+            });
+            map.on('mouseleave', 'places', function () {
+              map.getCanvas().style.cursor = '';
+            });
+
+            map.setLayoutProperty('Photos', 'icon-size', 
+            ['interpolate', ['linear'], ['zoom'],0,0.03,6,0.05,15,0.1, 24,0.3]);
+            
+          });
+
+        });
+      };
+
+    });
+      
+      map.on('idle', () => {
+      var toggleableLayerIds = ['Sons', 'Photos'];
+      var banner = ['map-assets/sound2.png', 'map-assets/photo.png', 'map-assets/video.png'];
+            // set up the corresponding toggle button for each layer
+            for (var i = 0; i < toggleableLayerIds.length; i++) {
+                var id = toggleableLayerIds[i];
+                 var img = document.createElement('img');
+                 img.src = banner[i];
+                 img.width = "50";
+                 var check = document.createElement('img');
+                 check.src = 'map-assets/check.png';  
+                 check.width = "25"; 
+                 check.style.paddingTop = "40px";
+                 var title = document.createElement('p');
+                 title.textContent = id;
+                 var link = document.createElement('a');
+                 link.href = '#';
+                 link.className = 'active';
+                 link.appendChild(check);
+                 link.appendChild(img);
+                 link.appendChild(title);
+                 link.onclick = function(e) {
+                 var clickedLayer = this.textContent;
+                 e.preventDefault();
+                 e.stopPropagation();
+
+                    var visibility = map.getLayoutProperty(clickedLayer, 'visibility');
+
+                    // toggle layer visibility by changing the layout object's visibility property
+                    if (visibility === 'visible') {
+                        map.setLayoutProperty(clickedLayer, 'visibility', 'none');
+                        this.className = '';
+                    } else {
+                        this.className = 'active';
+                        map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
+                    }
+                };
+
+                var layers = document.getElementById('menu');
+                layers.appendChild(link);
+            }
+});
+      // ZOOM
+      // map.addControl(new mapboxgl.NavigationControl(), 'top-left');      
+  </script>
+
+
+</body>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-W49XQQT');</script>
+<!-- End Google Tag Manager -->
+
+  
+</html>
